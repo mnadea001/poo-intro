@@ -2,6 +2,8 @@
 
     declare(strict_types=1);
 
+namespace App\PaymentGateway\Paypal;
+
     //? A partir d'ici on utilisera un typage strict afin de s'assurer de la validité de nos valeurs.
     //* Il faudra typer les attributs/propriétés dans les classes (private float $amount)
     //* Il faudra typer les arguments de méthodes (public function maFunction (int $arg1){})
@@ -15,6 +17,8 @@
         // private float $amount; //Montant de la transaction
         // private string $description; // Description de la transaction
 
+        private const COMMISSION = 2.9;
+
         //? Méthodes magiques de PHP (on les reconnaît car elles commencent toutes par un double underscore __)
         public function __construct(private float $amount, private string $description)
         {
@@ -24,7 +28,7 @@
 
         public function __destruct()
         {
-            echo 'Destruct '.$this->description;
+            echo 'Paypal';
         }
 
         //? Accesseurs/Modificateurs de propriétés (Getters/setters) : Ce sont des méthodes qui servent à accéder ou à modifier des propriétés de classe.
@@ -70,6 +74,13 @@
         public function addTax(float $rate): Transaction
         {
             $this->amount += $this->amount * $rate / 100;
+
+            return $this;
+        }
+
+        public function addCommission(): Transaction
+        {
+            $this->amount += $this->amount * $this::COMMISSION / 100;
 
             return $this;
         }
